@@ -27,7 +27,7 @@ function drush_check_aliases_check_ct_aliases() {
     // Don't proceed if we have entity translation or no translation at all.
     $translation_mechanism = variable_get('language_content_type_page', 0);
     if (!isset($translation_mechanism) || $translation_mechanism == ENTITY_TRANSLATION_ENABLED) {
-      drush_log('No translation mechanism for this content type (page).', 'error');
+      drush_log('No content translation mechanism for this content type (page).', 'error');
       return;
     }
 
@@ -68,31 +68,31 @@ function drush_check_aliases_check_ct_aliases() {
 
     // Check if translation alias matches source language alias.
     if ($alias == $talias) {
-      drush_log('Alias ' . $alias . ' matches translation.', 'ok');
+      drush_print(dt('OK: Alias ' . $alias . ' matches translation.'));
     } else {
-      drush_log('Alias ' . $alias . ' does not match ' . $talias, 'notice');
+      drush_print(dt('NOK: Alias ' . $alias . ' does not match ' . $talias));
     }
 
     // Check if alias of source language matches url generation.
     $url = url('node/' . $nid, array('language' => $default_language));
 
-    if ($url == '/' . $default_language->language . '/' . $alias
-      || $url == '/' . $alias . '_' . $default_language->language) {
-      drush_log('Url of origin node generates alias :' . $url, 'ok');
+    if (strpos($url, '/' . $default_language->language . '/' . $alias) !== false
+      || strpos($url, '/' . $alias . '_' . $default_language->language) !== false) {
+      drush_print(dt('OK: Url of origin node generates alias :' . $url));
     }
     else {
-      drush_log('Url of origin node does not generate alias :' . $url, 'notice');
+      drush_print(dt('NOK: Url of origin node does not generate alias :' . $url));
     }
 
     // Check if alias of source language matches url generation.
     $url = url('node/' . $tnid, array('language' => $translate_language));
 
-    if ($url == '/' . $translate_language->language . '/' . $talias
-      || $url == '/' . $talias . '_' . $translate_language->language) {
-      drush_log('Url of translation node generates alias :' . $url, 'ok');
+    if (strpos($url, '/' . $translate_language->language . '/' . $alias) !== false
+      || strpos($url, '/' . $alias . '_' . $translate_language->language) !== false) {
+      drush_print(dt('OK: Url of translation node generates alias :' . $url));
     }
     else {
-      drush_log('Url of translation node does not generate alias :' . $url, 'notice');
+      drush_print(dt('NOK: Url of translation node does not generate alias :' . $url));
     }
 
     node_delete($nid);
