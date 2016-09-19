@@ -32,7 +32,7 @@ function drush_check_aliases_check_ct_aliases() {
   $page_default_pattern = variable_get('pathauto_node_page_' . $default_language->language . '_pattern', '');
   $page_translate_pattern = variable_get('pathauto_node_page_' . $translate_language->language . '_pattern', '');
 
-  if (count($languages) > 1 || (!empty($node_pattern) && !empty ($page_pattern) && !empty($page_default_pattern) && !empty($page_translate_pattern))) {
+  if (count($languages) > 1 && (!empty($node_pattern) || !empty ($page_pattern) || !empty($page_default_pattern) || !empty($page_translate_pattern))) {
 
     // Don't proceed if we have entity translation or no translation at all.
     $translation_mechanism = variable_get('language_content_type_page', 0);
