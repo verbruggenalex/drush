@@ -76,7 +76,7 @@ function drush_check_aliases_check_ct_aliases() {
     // Check if alias of source language matches url generation.
     $url = url('node/' . $nid, array('language' => $default_language));
 
-    if (strpos($url, '/' . $default_language->language . '/' . $alias) !== false
+    if (strpos($url, '/' . $alias) !== false
       || strpos($url, '/' . $alias . '_' . $default_language->language) !== false) {
       drush_print(dt('OK: Url of origin node generates alias :' . $url));
     }
