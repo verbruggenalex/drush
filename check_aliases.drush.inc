@@ -22,7 +22,17 @@ function check_aliases_drush_command() {
  */
 function drush_check_aliases_check_ct_aliases() {
 
-  if (drupal_multilingual()) {
+  $languages = language_list();
+  $languages = language_list();
+  $default_language = language_default();
+  unset($languages[$default_language->language]);
+  $translate_language = array_pop($languages);
+  $node_pattern = variable_get('pathauto_node_pattern', '');
+  $page_pattern = variable_get('pathauto_node_page_pattern', '');
+  $page_default_pattern = variable_get('pathauto_node_page_' . $default_language->language . '_pattern', '');
+  $page_translate_pattern = variable_get('pathauto_node_page_' . $translate_language->language . '_pattern', '');
+
+  if (count($languages) > 1 || (!empty($node_pattern) && !empty ($page_pattern) && !empty($page_default_pattern) && !empty($page_translate_pattern))) {
 
     // Don't proceed if we have entity translation or no translation at all.
     $translation_mechanism = variable_get('language_content_type_page', 0);
@@ -31,10 +41,6 @@ function drush_check_aliases_check_ct_aliases() {
       return;
     }
 
-    $languages = language_list();
-    $default_language = language_default();
-    unset($languages[$default_language->language]);
-    $translate_language = array_pop($languages);
     $title = 'Alias for page';
 
     // Create a node.
