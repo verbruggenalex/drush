@@ -37,7 +37,6 @@ function drush_check_aliases_check_ct_aliases() {
     // Don't proceed if we have entity translation or no translation at all.
     $translation_mechanism = variable_get('language_content_type_page', 0);
     if (!isset($translation_mechanism) || $translation_mechanism == ENTITY_TRANSLATION_ENABLED) {
-      drush_log('No content translation mechanism for this content type (page).', 'error');
       return;
     }
 
