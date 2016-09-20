@@ -22,24 +22,29 @@ function check_aliases_drush_command() {
  */
 function drush_check_aliases_check_ct_aliases() {
 
-  $languages = language_list();
+  // Prepare needed languages.
   $languages = language_list();
   $default_language = language_default();
   unset($languages[$default_language->language]);
   $translate_language = array_pop($languages);
+
+  // Get url alias patterns.
   $node_pattern = variable_get('pathauto_node_pattern', '');
   $page_pattern = variable_get('pathauto_node_page_pattern', '');
   $page_default_pattern = variable_get('pathauto_node_page_' . $default_language->language . '_pattern', '');
   $page_translate_pattern = variable_get('pathauto_node_page_' . $translate_language->language . '_pattern', '');
 
+  // If we have only one language and there is a pattern set for the page content
+  // type. Then start the checks on our aliases.
   if (count($languages) > 1 && (!empty($node_pattern) || !empty ($page_pattern) || !empty($page_default_pattern) || !empty($page_translate_pattern))) {
 
-    // Don't proceed if we have entity translation or no translation at all.
+    // Do not proceed if we have entity translation or no translation  at all.
     $translation_mechanism = variable_get('language_content_type_page', 0);
     if (!isset($translation_mechanism) || $translation_mechanism == ENTITY_TRANSLATION_ENABLED) {
       return;
     }
 
+    // Set the title
     $title = 'Alias for page';
 
     // Create a node.
@@ -54,6 +59,7 @@ function drush_check_aliases_check_ct_aliases() {
     $node->tnid = $node->nid;
     node_save($node);
 
+    // Set nid and get alias.
     $nid = $node->nid;
     $alias = drupal_get_path_alias('node/' . $nid, $default_language->language);
 
@@ -68,6 +74,7 @@ function drush_check_aliases_check_ct_aliases() {
     $tnode->tnid = $node->nid;
     node_save($tnode);
 
+    // Set nid and get alias for translation.
     $tnid = $tnode->nid;
     $talias = drupal_get_path_alias('node/' . $tnid, $translate_language->language);
 
@@ -100,6 +107,7 @@ function drush_check_aliases_check_ct_aliases() {
       drush_print(dt('NOK: Url of translation node does not generate alias :' . $url));
     }
 
+    // Cleanup the created nodes.
     node_delete($nid);
     node_delete($tnid);
   }
